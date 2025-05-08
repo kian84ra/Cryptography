@@ -1,0 +1,62 @@
+# Diffie-Hellman Key Exchange - Complete Walkthrough
+  The Diffie-Hellman (DH) key exchange, which allows two parties to establish a shared secret over an insecure channel
+
+# Find the Size of the Prime Number (in bits)
+  Command:
+    openssl dhparam -in dhparam.pem -text -noout | grep "DH Parameters" -A1 | grep "Prime"
+  Expected Output:
+    DH Parameters: (4096 bit)
+  Answer: 4096 bits
+
+# Find the Last Byte (Least Significant Byte) of the Prime Number
+  Command:
+    openssl dhparam -in dhparam.pem -text -noout | grep -A 20 "prime:" | tail -n 1 | awk '{print $NF}'  
+  Explanation:
+    Extracts the prime number (P) in hex format.
+  The last byte is the final 2 characters.
+  Answer: 4f
+
+# How Diffie-Hellman Works
+  Goal: Securely exchange a shared secret key over an insecure channel.
+  Steps:
+    Agree on public parameters:
+      A large prime number P (e.g., 2048 or 4096 bits).
+      A generator g (usually 2 or 5).
+      Alice & Bob generate private keys:
+      Alice picks a (private), computes A = g^a mod P, sends A to Bob.
+      Bob picks b (private), computes B = g^b mod P, sends B to Alice.
+
+    Compute shared secret:
+      Alice computes S = B^a mod P.
+      Bob computes S = A^b mod P.
+      Both now have the same S (used as a symmetric key).
+
+  2. Why is DH Secure?
+    Discrete Logarithm Problem (DLP):
+      Given P, g, A = g^a mod P, it’s computationally infeasible to find a.
+      Same for b from B = g^b mod P.
+  MITM Vulnerability:
+      Without authentication (e.g., PKI), an attacker can intercept and modify A and B.
+      Solution: Use TLS (combines DH with certificates).
+
+  3. OpenSSL Commands Breakdown
+    Command	                                                        Purpose
+      openssl dhparam -out dh.pem 2048	Generates 2048-bit          DH parameters
+      openssl dhparam -in dh.pem -text -noout	                      Displays P and g
+
+
+# Simulating DH Key Exchange (Python Example)
+      from cryptography.hazmat.primitives.asymmetric import dh
+      # Generate parameters (P & g)
+      parameters = dh.generate_parameters(generator=2, key_size=2048)
+      # Alice's key pair
+      alice_private = parameters.generate_private_key()
+      alice_public = alice_private.public_key()
+      # Bob's key pair
+      bob_private = parameters.generate_private_key()
+      bob_public = bob_private.public_key()
+      # Shared secret
+      alice_shared = alice_private.exchange(bob_public)
+      bob_shared = bob_private.exchange(alice_public)
+      print("Shared secret matches:", alice_shared == bob_shared)
+
