@@ -1,0 +1,46 @@
+# Symmetric Encryption - Complete Walkthrough
+   Work with symmetric encryption (AES, CAMELLIA) using GPG and OpenSSL
+
+ # Decrypt quote01 (AES256) using GPG
+    Command:
+      gpg --output decrypted_quote01.txt --decrypt --batch --passphrase "s!kR3T55" quote01
+  Expected Output:
+    A text file with the decrypted quote.
+  Answer: The third word is waste
+
+# Decrypt quote02 (AES256-CBC) using OpenSSL
+  Command:
+    openssl aes-256-cbc -d -in quote02 -out decrypted_quote02.txt -k "s!kR3T55"
+  Expected Output:
+    A text file with the decrypted quote.
+  Answer: The third word is science
+
+# Decrypt quote03 (CAMELLIA256) using GPG
+  Command:
+    gpg --output decrypted_quote03.txt --decrypt --batch --passphrase "s!kR3T55" quote03
+  Expected Output:
+    A text file with the decrypted quote.
+  Answer: The third word is understand.
+
+# Symmetric Encryption Basics
+  Uses one key for both encryption & decryption.
+  AES (Advanced Encryption Standard) is the most common (128, 192, or 256-bit keys).
+  CAMELLIA is another secure algorithm (similar to AES, popular in Japan).
+
+  2. GPG vs. OpenSSL
+    Tool	Usage	Example
+    GPG	Encrypt/decrypt files with passphrase	gpg --symmetric --cipher-algo AES256 file.txt
+    OpenSSL	Low-level encryption (AES, 3DES, etc.)	openssl aes-256-cbc -e -in file.txt -out encrypted_file
+  3. Why Use --batch in GPG?
+    Prevents GPG from asking for interactive input.
+  Required when automating decryption.
+
+  OpenSSL with -k vs. -pass
+    -k "password" → Directly provides the password.
+    -pass pass:"password" → Alternative syntax (more secure in scripts).
+
+    Encrypting Files (Practice)
+      Encrypt with GPG (AES256)
+    gpg --symmetric --cipher-algo AES256 --batch --passphrase "s!kR3T55" -o encrypted.gpg file.txt
+      Encrypt with OpenSSL (AES256-CBC)
+    openssl aes-256-cbc -e -in file.txt -out encrypted.enc -k "s!kR3T55"
