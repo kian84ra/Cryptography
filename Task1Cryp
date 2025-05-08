@@ -1,0 +1,44 @@
+# Cryptography
+# Concept
+  Learn the difference between:
+      Symmetric Encryption (AES, DES) - Uses the same key for encryption & decryption.
+      Asymmetric Encryption (RSA, Diffie-Hellman) - Uses public & private keys.
+      Hashing (SHA-256, MD5) - One-way function to verify data integrity.
+      PKI (Public Key Infrastructure) - Manages digital certificates for secure communication.
+      TLS/SSL - Secures web connections (HTTPS).
+
+# Study Historical Ciphers
+  Caesar Cipher (Shift cipher):
+      Encrypts by shifting letters (e.g., A → D, B → E with key=3).
+      Weakness: Only 25 possible keys → Easy to brute-force.
+
+  Substitution Cipher:
+      Replaces each letter with another (e.g., A → X, B → P).
+      Weakness: Vulnerable to frequency analysis (e.g., 'E' is the most common letter in English).
+
+  Transposition Cipher:
+      Rearranges letters (e.g., writing in columns, then reading in rows).
+      Weakness: Structure can be detected with pattern analysis.
+
+# Practice Decrypting Caesar Cipher
+  Given an encrypted message:
+    "YMNX NX FQUMF GWFAT HTSYFHYNSL YFSLT MTYJQ RNPJ"
+    
+  Brute-force approach: Try all 25 possible shifts.
+    Solution: Shift by 5 →
+    "THIS IS ALPHA BRAVO CONTACTING TANGO HOTEL MIKE"
+
+  Encrypted Quote:
+    "Xjnvw lc sluxjmw jsqm wjpmcqbg jg wqcxqmnvw; xjzjmmjd lc wjpm sluxjmw jsqm bqccqm zqy." Zlwvzjxj Zpcvcol
+  How to Solve?
+    Recognize it’s a Caesar Cipher (shift-based).
+    Use brute-force or frequency analysis.
+    Find the correct shift (likely 21 or 5).
+    Decrypt to get the original quote.
+    Answer: The quote is by Miyamoto Musashi (Option A).
+
+  Key Takeaways
+    Old ciphers (Caesar, substitution) are insecure → Modern cryptography uses complex math (AES, RSA).
+    Brute-force attacks work on weak keys (e.g., Caesar’s 25 keys vs. AES-256’s ~2²⁵⁶ keys).
+    Frequency analysis breaks substitution ciphers by analyzing letter patterns.
+
