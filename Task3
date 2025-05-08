@@ -1,0 +1,51 @@
+# Asymmetric Encryption (RSA) - Complete Walkthrough
+  Work with asymmetric encryption (RSA) using OpenSSL to decrypt messages and analyze private keys
+
+# Decrypt ciphertext_message to Find the First Word
+  Command:
+    openssl pkeyutl -decrypt -in ciphertext_message -inkey private-key.pem -out decrypted_message.txt
+  Expected Output:
+    A file (decrypted_message.txt) containing the plaintext.
+  Answer: The first word is Perception
+
+# Find the Last Byte of p in Bob's Private Key
+  Command:
+    openssl rsa -in private-key.pem -text -noout | grep -A1 "prime1" | tail -n1 | awk '{print $NF}'
+  Explanation:
+    openssl rsa -text -noout → Displays RSA key details.
+  prime1 is p in RSA.
+  The last byte is shown in hex format.
+  Answer: e7
+
+# Find the Last Byte of q in Bob's Private Key
+  Command:
+    openssl rsa -in private-key.pem -text -noout | grep -A1 "prime2" | tail -n1 | awk '{print $NF}'
+  Explanation:
+    prime2 is q in RSA.
+  The last byte is shown in hex format.
+  Answer: 27
+
+# How RSA Works
+  Public Key: Used to encrypt data ((N, e)).
+  Private Key: Used to decrypt data ((N, d)).
+  Key Generation:
+    Choose two large primes p and q.
+    Compute N = p * q.
+    Compute ϕ(N) = (p-1)(q-1).
+    Choose e (usually 65537) and compute d (modular inverse of e
+
+# OpenSSL Commands Breakdown
+  Command	                                                                                Purpose
+    openssl genrsa -out key.pem 2048	Generates 2048-bit                                  RSA key
+    openssl rsa -in key.pem -pubout -out pub.pem	                                        Extracts public key
+    openssl pkeyutl -encrypt -in msg.txt -out ciphertext -pubin -inkey pub.pem	          Encrypts with public key
+    openssl pkeyutl -decrypt -in ciphertext -inkey key.pem -out msg.txt	                  Decrypts with private key
+
+# Encrypting a Message (Practice)
+    Encrypt a Message for Bob
+      openssl pkeyutl -encrypt -in message.txt -out ciphertext -inkey public-key.pem -pubin
+    View RSA Key Details
+      openssl rsa -in private-key.pem -text -noout    
+    Look for modulus (N), publicExponent (e), and privateExponent (d).
+
+
