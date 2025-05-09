@@ -1,0 +1,45 @@
+# Authenticating with Passwords - Complete Walkthrough
+  Focuses on secure password storage techniques in cryptography. 
+
+# Crack the MD5 Hash: 3fc0a7acf087f549ac2b266baf94b8b1
+  Steps to Solve:
+    Recognize this is an MD5 hash (32 hexadecimal characters)
+    Use a rainbow table or hash cracking tool:
+      Online tools like CrackStation
+      Command line with hashcat or john
+  Using CrackStation:
+    Paste the hash 3fc0a7acf087f549ac2b266baf94b8b1
+    Click "Crack Hashes"
+    Result: The original password is qwerty123
+  Answer: qwerty123
+
+# Why MD5 is Insecure
+  MD5 is cryptographically broken (collision attacks since 2004)
+  Properties of a good password hash:
+    Slow to compute (not fast like MD5)
+    Uses salt (random data to prevent rainbow tables)
+    Adaptive (can increase iterations over time)
+
+# Secure Password Storage Techniques
+Method	     Description	                                Example
+Salted       Hash	Hash(password + random salt)	          SHA256("password" + "x1y2z3")
+PBKDF2	     Password-Based Key Derivation Function 2	    PBKDF2(password, salt, 10000 iterations)
+bcrypt	     Adaptive hash with work factor	              bcrypt(password, salt, cost=12)
+Argon2	     Memory-hard function (modern standard)	      Argon2(password, salt)
+
+# How to Properly Store Passwords
+  Generate a random salt (16+ bytes)
+  Use a slow hash function (PBKDF2, bcrypt, Argon2)
+  Store both the hash and salt (never store plaintext!)
+
+Example (Python):
+  import hashlib, os
+  password = "qwerty123"
+  salt = os.urandom(16)  # Random salt
+  hashed = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000)
+  print(f"Salted hash: {salt.hex()}${hashed.hex()}")
+
+# Cracking MD5 with Hashcat
+  hashcat -m 0 3fc0a7acf087f549ac2b266baf94b8b1 /usr/share/wordlists/rockyou.txt
+    -m 0: MD5 mode
+  rockyou.txt: Common password wordlist
