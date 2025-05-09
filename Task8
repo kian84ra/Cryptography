@@ -1,0 +1,43 @@
+# Cryptography and Data - Complete Walkthrough
+  Demonstrates how cryptography is applied in real-world HTTPS connections
+
+# HTTPS/TLS Handshake Process
+  When you visit a secure website (HTTPS), this is what happens cryptographically:
+  Client Hello
+    Browser sends supported cipher suites (e.g., TLS_AES_256_GCM_SHA384)
+    Offers a random "Client Random" number
+  Server Hello
+    Server chooses a cipher suite
+    Sends its SSL certificate (containing public key)
+    Provides a "Server Random" number
+  Key Exchange
+    Client verifies the certificate (checks CA signature, expiry, domain)
+    Client generates a "Pre-Master Secret" (encrypted with server's public key)
+    Both sides derive the same "Master Secret" using:
+      Client Random
+      Server Random
+      Pre-Master Secret
+  Secure Communication
+      Master Secret generates session keys for:
+      Encryption (e.g., AES-256)
+      Authentication (HMAC)
+
+# Practical Exercise
+  View a Website's Certificate Chain
+    openssl s_client -connect example.com:443 -showcerts 2>/dev/null | openssl x509 -noout -text
+  What to check:
+    Issuer (which CA signed it)
+    Validity period
+    Public key algorithm (RSA/ECDSA)
+    Signature algorithm (SHA256WithRSA)
+
+# Security Takeaways
+  Why HTTPS Matters
+    Encrypts data in transit (prevents eavesdropping)
+    Verifies server identity (stops phishing)
+    Ensures data integrity (no tampering)
+  Perfect Forward Secrecy
+    Modern TLS uses ephemeral keys (even if server's private key is compromised later, past sessions stay secure)
+  Mixed Content Risks
+    If a HTTPS page loads HTTP resources, security is compromised
+
