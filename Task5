@@ -1,0 +1,65 @@
+# Hashing - Complete Walkthrough
+  Covers cryptographic hashing, HMAC, and checksum verification.
+
+# Find SHA256 Checksum of order.json
+  Command:
+    sha256sum order.json
+  Expected Output:
+    2c34b68669427d15f76a1c06ab941e3e6038dacdfb9209455c87519a3ef2c660  order.json
+  Answer:
+    2c34b68669427d15f76a1c06ab941e3e6038dacdfb9209455c87519a3ef2c660
+
+# Modify order.json and Find New Checksum
+  Steps:
+    Open order.json:
+        nano order.json  # or use any text editor
+    Change "amount": 1000 to "amount": 9000.
+    Save the file and recalculate the hash:
+        sha256sum order.json
+    New Output:
+      11faeec5edc2a2bad82ab116bbe4df0f4bc6edd96adac7150bb4e6364a238466  order.json
+    Answer:
+      11faeec5edc2a2bad82ab116bbe4df0f4bc6edd96adac7150bb4e6364a238466
+
+# Calculate HMAC of order.txt with Key 3RfDFz82
+  Command (using OpenSSL):
+      openssl dgst -sha256 -hmac "3RfDFz82" order.txt
+  Alternative (using sha256hmac):
+      sha256hmac order.txt --key "3RfDFz82"
+  Expected Output:
+      HMAC-SHA256(order.txt)= c7e4de386a09ef970300243a70a444ee2a4ca62413aeaeb7097d43d2c5fac89f
+  Answer:
+      c7e4de386a09ef970300243a70a444ee2a4ca62413aeaeb7097d43d2c5fac89f
+
+# Cryptographic Hashing
+  Purpose: Generate a fixed-size "fingerprint" of data (e.g., SHA256 produces 256-bit/64-hex-digit hashes).
+    Properties:
+    Deterministic: Same input → same output.
+    One-way: Cannot reverse the hash to get the original data.
+    Avalanche effect: Tiny changes (e.g., 1 bit) completely alter the hash.
+
+  2. HMAC (Hash-Based Message Authentication Code)
+    Purpose: Verify both integrity and authenticity of a message using a secret key.
+    Formula: HMAC = Hash((Key ⊕ opad) || Hash((Key ⊕ ipad) || Message))
+    (where opad/ipad are padding constants).
+    Use Cases: API authentication, session token
+
+  3. Why SHA256 Over MD5?
+    Hash Algorithm	          Security Status	                    Output Size            	Notes
+    MD5	                      Broken (collisions found)	           128 bits	              Unsafe for cryptography
+    SHA-1	                    Broken (theoretical attacks)	       160 bits	              Deprecated
+    SHA256	                  Secure	                             256 bits	              Recommended for most 
+
+# Practical Examples
+    Generate a SHA256 Hash (Command Line)
+        echo -n "Hello World" | sha256sum
+    # Output: a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e
+    Verify File Integrity
+        sha256sum file.txt > checksum.txt  # Save hash
+        sha256sum -c checksum.txt         # Verify later
+    HMAC with Python
+        import hmac, hashlib
+        key = b"3RfDFz82"
+        message = open("order.txt", "rb").read()
+        hmac_sha256 = hmac.new(key, message, hashlib.sha256).hexdigest()
+        print(hmac_sha256)  # Output matches OpenSSL
