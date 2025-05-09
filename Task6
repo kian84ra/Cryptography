@@ -1,0 +1,51 @@
+# PKI and SSL/TLS - Complete Walkthrough
+  Covers Public Key Infrastructure (PKI) and SSL/TLS certificates.
+
+# Find the Public Key Size (in bits)
+  Command:
+    openssl x509 -in cert.pem -text -noout | grep "Public-Key"
+  Expected Output:
+    Public-Key: (4096 bit)
+  Answer: 4096 bits
+
+# Find the Certificate Expiry Year
+  Command:
+    openssl x509 -in cert.pem -noout -enddate | awk -F'=' '{print $2}'
+  Expected Output:
+    Dec 31 23:59:59 2039 GMT
+  Answer: 2039
+
+# What is PKI?
+  Public Key Infrastructure (PKI) is a system that manages digital certificates and public-key encryption.
+  Components:
+    Certificate Authority (CA): Trusted entity that issues certificates (e.g., DigiCert, Let's Encrypt).
+    Certificates: Digital documents that bind a public key to an identity (e.g., example.org).
+    Registration Authority (RA): Verifies certificate requests.
+
+  2. How SSL/TLS Works
+    Client requests a secure connection (e.g., https://example.org).
+    Server sends its SSL certificate (containing its public key).
+    Client verifies the certificate:
+        Checks if it's signed by a trusted CA.
+        Validates the expiry date and domain match.
+    Key Exchange: Client and server establish a shared secret (via Diffie-Hellman or RSA).
+    Encrypted Communication: All data is encrypted using symmetric encryption (e.g., AES).
+
+3. Self-Signed vs CA-Signed Certificates
+Type	            Trusted?	                      Use Case	                Example
+CA-Signed	        Yes (trusted by browsers)	      Production websites	      example.org
+Self-Signed	      No (manual trust required)	    Testing/internal use	    localhost
+
+# Practical Examples
+    Generate a Self-Signed Certificate
+        openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365 -nodes
+    -x509: Creates a self-signed certificate.
+    -days 365: Valid for 1 year.
+    -nodes: No passphrase (for testing).
+
+    Inspect a Certificate
+        openssl x509 -in cert.pem -text -noout
+    Shows issuer, validity dates, public key, and signature.
+
+# Verify a Website’s Certificate
+    openssl s_client -connect example.org:443 -servername example.org | openssl x509 -noout -text
